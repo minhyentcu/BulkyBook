@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BulkyBook.DataAccess.Repository
 {
-   public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
 
@@ -15,11 +15,12 @@ namespace BulkyBook.DataAccess.Repository
         {
             _context = context;
             Category = new CategoryRepository(context);
+            CoverType = new CoverTypeRepository(context);
             SP_Call = new SP_Call(context);
         }
 
         public ICategoryRepository Category { get; private set; }
-
+        public ICoverTypeRepository CoverType { get; private set; }
         public ISP_Call SP_Call { get; private set; }
 
         public void Dispose()

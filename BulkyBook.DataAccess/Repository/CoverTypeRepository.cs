@@ -10,30 +10,30 @@ using System.Threading.Tasks;
 
 namespace BulkyBook.DataAccess.Repository
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class CoverTypeRepository : Repository<CoverType>, ICoverTypeRepository
     {
         private readonly ApplicationDbContext _context;
-        public CategoryRepository(ApplicationDbContext context) : base(context)
+        public CoverTypeRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public void Update(Category category)
+        public void Update(CoverType coverTye)
         {
-            var entity = _context.Categories.FirstOrDefault(x => x.Id == category.Id);
+            var entity = _context.CoverTypes.FirstOrDefault(x => x.Id == coverTye.Id);
             if (entity != null)
             {
-                entity.Name = category.Name;
+                entity.Name = coverTye.Name;
                 _context.SaveChanges();
             }
         }
 
-        public async Task UpdateAsync(Category category)
+        public async Task UpdateAsync(CoverType coverType)
         {
-            var entity = await _context.Categories.FirstOrDefaultAsync(x => x.Id == category.Id);
+            var entity = await _context.CoverTypes.FirstOrDefaultAsync(x => x.Id == coverType.Id);
             if (entity != null)
             {
-                entity.Name = category.Name;
+                entity.Name = coverType.Name;
             }
         }
     }
