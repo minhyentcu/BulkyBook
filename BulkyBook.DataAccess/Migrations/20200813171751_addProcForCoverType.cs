@@ -23,7 +23,7 @@ namespace BulkyBook.DataAccess.Migrations
                 " @Name varchar(100) " +
                 " AS " +
                 " BEGIN " +
-                " UPDATE dbo.CoverType " +
+                " UPDATE dbo.CoverTypes " +
                 " SET Name = @Name "+
                 " Where Id= @Id "+
                 " END ");

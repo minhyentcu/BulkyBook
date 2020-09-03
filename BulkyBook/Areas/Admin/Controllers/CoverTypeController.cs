@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
+using BulkyBook.Utility;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBook.Areas.Admin.Controllers
@@ -29,8 +31,10 @@ namespace BulkyBook.Areas.Admin.Controllers
                 return View(coverType);
             }
             //this for update
-
-            coverType = _unitOfWork.CoverType.Get(id.GetValueOrDefault());
+            // coverType = _unitOfWork.CoverType.Get(id.GetValueOrDefault());
+            var parameter = new DynamicParameters();
+            parameter.Add("@Id", id.Value);
+            coverType = _unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameter);
             if (coverType == null)
             {
                 return NotFound();
@@ -44,14 +48,19 @@ namespace BulkyBook.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var parameter = new DynamicParameters();
+                parameter.Add("@Name", coverType.Name);
                 if (coverType.Id == 0)
                 {
-                    _unitOfWork.CoverType.Insert(coverType);
+                    //_unitOfWork.CoverType.Insert(coverType);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Create, parameter);
 
                 }
                 else
                 {
-                    _unitOfWork.CoverType.Update(coverType);
+                    parameter.Add("@Id", coverType.Id);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Update, parameter);
+                    //_unitOfWork.CoverType.Update(coverType);
                 }
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -64,18 +73,22 @@ namespace BulkyBook.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var categories = _unitOfWork.CoverType.GetAll();
-            return Json(new { data = categories });
+            //var categories = _unitOfWork.CoverType.GetAll();
+            //return Json(new { data = categories });
+            var categorys = _unitOfWork.SP_Call.List<CoverType>(SD.Proc_CoverType_GetAll,null);
+            return Json(new { data = categorys });
         }
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var entity = _unitOfWork.CoverType.Get(id);
+            var parameter = new DynamicParameters();
+            parameter.Add("@Id", id);
+            var entity = _unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameter);
             if (entity == null)
             {
                 return Json(new { success = false,message="Error while deleting!" });
             }
-            _unitOfWork.CoverType.Remove(entity);
+            _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Delete, parameter);
             _unitOfWork.Save();
             return Json(new { success = true, message = "Delete successfully!" });
         }
