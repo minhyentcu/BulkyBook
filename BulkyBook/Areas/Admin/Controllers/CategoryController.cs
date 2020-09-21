@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
+using BulkyBook.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBook.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -74,7 +77,7 @@ namespace BulkyBook.Areas.Admin.Controllers
             var entity = _unitOfWork.Category.Get(id);
             if (entity == null)
             {
-                return Json(new { success = false,message="Error while deleting!" });
+                return Json(new { success = false, message = "Error while deleting!" });
             }
             _unitOfWork.Category.Remove(entity);
             _unitOfWork.Save();

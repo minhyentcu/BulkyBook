@@ -19,6 +19,9 @@ namespace BulkyBook.DataAccess.Repository
             Product = new ProductRepository(context);
             Company = new CompanyRepository(context);
             ApplicationUser = new ApplicationUserRepository(context);
+            ShoppingCartRepository = new ShoppingCartRepositoty(context);
+            OrderDetailRepository = new OrderDetailRepository(context);
+            OrderHeaderRepository = new OrderHeaderRepository(context);
             SP_Call = new SP_Call(context);
         }
 
@@ -29,6 +32,9 @@ namespace BulkyBook.DataAccess.Repository
 
         public ICompanyRepository Company { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IShoppingCartRepository ShoppingCartRepository { get; private set; }
+        public IOrderDetailRepository OrderDetailRepository { get; private set; }
+        public IOrderHeaderRepository OrderHeaderRepository { get; private set; }
         public ISP_Call SP_Call { get; private set; }
 
         public void Dispose()
